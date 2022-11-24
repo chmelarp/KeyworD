@@ -1,0 +1,19 @@
+/* 
+ *  Document   : style
+ *  Created on : Apr 4, 2013, 10:35:54 PM
+ *  Author     : chmelarp
+ *  Copyright (C) 2013  Petr Chmelar
+ */
+
+root { 
+    display: block;
+}
+
+body {
+    font-family: Sans-Serif;
+    background-color: gray;    
+}
+
+a         { text-decoration: none; }
+a:hover	  { text-decoration: underline; }
+

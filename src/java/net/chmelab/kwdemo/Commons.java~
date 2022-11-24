@@ -1,0 +1,168 @@
+/* 
+ *  Class      : Commons
+ *  Created on : Jul 4, 2009
+ *  Author     : chmelarp
+ *  Copyright (C) 2009-2013  Petr Chmelar
+ */
+
+package net.chmelab.clrdemo;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Commons keep session-persistent objects as the logger and DB connection
+ * @author chmelarp
+ */
+public class Commons {
+
+    // DB Connection
+    public Connection conn = null;
+    public String connectionStr = "jdbc:postgresql://localhost:5432/"; // "jdbc:postgresql://minerva3.fit.vutbr.cz:5432/"
+    public String user = "vidte";
+    public String password = "secret";
+
+    public String dataset = "imagenet";
+    public String location = "/mnt/vidte/datasets";
+
+    // Logger
+    SimpleDateFormat formatter;
+    public Logger logger = Logger.getLogger(Commons.class.getName());
+    
+    // LanguageUtils
+    public LanguageUtils languageDetector;
+    
+
+    /**
+     * Creates the logger and connects to the default DB
+     * @param owner
+     */
+    public Commons(Connection conn, Locale agentLocale) {
+        this.formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+        try {
+            if (conn == null || !conn.isValid(2)) this.pgConnect();
+            else this.conn = conn;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+        
+        // TODO: the lD should be filled in with word statistics somehow
+        this.languageDetector = new LanguageUtils(this, agentLocale);
+    }
+    
+    public Commons(Locale agentLocale) {
+        this(null, agentLocale);
+    }
+    
+    public Commons() {
+        this(null, null);
+    }
+    
+        
+
+    protected void finalize() {
+        this.pgDisconnect();
+        logTime("disconnected");
+    }     
+
+    public String getTime() {
+        return formatter.format(new java.util.Date());
+    }
+
+    /**
+     * Log to the main view
+     * @param String
+     */
+    public synchronized void log(String str) {
+        logger.log(Level.INFO, str);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public void logTime(String str) {
+        this.log(this.getTime() + ": "+ str + "\n");
+    }
+
+    /**
+     * Logs an error to the main view...
+     * @param Object
+     * @param String
+     */
+    public void error(Object o, String str) {
+        logger.log(Level.SEVERE, this.getTime() + " ERROR at " + o.getClass().getName() + "\n" + str + "\n");
+    }
+
+
+    /**
+     * Connect to the database...
+     */
+    public boolean pgConnect() {
+
+        // String url = "jdbc:postgresql://localhost/test?user=fred&password=secret&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+        // Connection conn = DriverManager.getConnection(url);
+
+        // find library
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException ex) {
+            logger.log(Level.SEVERE, null, ex);
+            return false;
+        }
+/*
+        // connect
+        try {   // with SSL
+
+            // set properties
+            final Properties properties = new Properties();
+            properties.put("user", user);
+            properties.put("password", password);
+            properties.put("ssl", "true");
+            // don't be paranoid... see http://jdbc.postgresql.org/documentation/83/ssl-client.html#nonvalidating
+            properties.put("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
+
+            conn = DriverManager.getConnection(connectionStr, properties);
+            this.logTime("Connected using SSL: "+ connectionStr);
+            return true;
+
+        } catch (SQLException ex) {
+
+            this.logTime("cannot connect using SSL, trying unsecure");
+            logger.log(Level.SEVERE, null, ex);
+*/
+            try {   // without SSL
+                conn = DriverManager.getConnection(connectionStr, user, password);
+                this.logTime("Connected (no SSL): "+ connectionStr);
+                return true;
+
+            } catch (SQLException e) {
+                conn = null;
+                this.error(this, "Connection failed: "+ connectionStr);
+                logger.log(Level.SEVERE, null, e);
+                return false;
+            }
+  /*   } */
+        
+       // return false;
+    }
+    
+    public boolean pgDisconnect() {
+        if (this.conn != null) try {
+            this.conn.close();
+        } catch (SQLException ex) {
+            this.error(this, "connection closed succesfully :)");
+            logger.log(Level.SEVERE, null, ex);
+        } finally {
+            conn = null;
+        }
+        
+        return true;
+    }
+    
+}
