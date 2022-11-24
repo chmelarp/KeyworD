@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/p3/Projects/ColourBox/ColourDemo/src/java/net/chmelab/beans/ProcessBean.java</file>
-            <file>file:/home/p3/Projects/ColourBox/ColourDemo/web/about.jsp</file>
-            <file>file:/home/p3/Projects/ColourBox/ColourDemo/src/java/net/chmelab/clrdemo/Commons.java</file>
-            <file>file:/home/p3/Projects/ColourBox/ColourDemo/web/index.jsp</file>
-            <file>file:/home/p3/Projects/ColourBox/ColourDemo/src/java/net/chmelab/clrdemo/WebUtils.java</file>
-            <file>file:/home/p3/Projects/ColourBox/ColourDemo/src/java/net/chmelab/clrdemo/LanguageUtils.java</file>
+            <file>file:/home/p3/Resistine/Projects/KeyworD/web/about.jsp</file>
+            <file>file:/home/p3/Resistine/Projects/KeyworD/web/META-INF/context.xml</file>
+            <file>file:/home/p3/Resistine/Projects/KeyworD/web/index.jsp</file>
+            <file>file:/home/p3/Resistine/Projects/KeyworD/src/java/org/tartarus/snowball/TestApp.java</file>
+            <file>file:/home/p3/Resistine/Projects/KeyworD/src/java/net/chmelab/kwdemo/StemMap.java</file>
         </group>
     </open-files>
 </project-private>
